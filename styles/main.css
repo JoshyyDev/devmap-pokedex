@@ -1,0 +1,127 @@
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+}
+
+.main_container {
+  width: min(100%, 1024px);
+  margin: 2rem 1rem;
+}
+
+.cards_wrapper {
+  width: 400px;
+}
+
+.card_container {
+  width: 100%;
+  background-color: transparent;
+}
+
+.card__header {
+  position: relative;
+
+  width: 100%;
+  padding: 4rem;
+
+  background-color: #ecec1d;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card__details {
+  width: 100%;
+  margin-bottom: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.card__details h1 {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.card__details h1 strong {
+  color: #fff;
+  font-size: 2.4rem;
+}
+
+.card__details h1 span {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.card__details mark {
+  display: inline-block;
+
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  font-size: 1.4rem;
+
+  margin: 0.5rem;
+
+  border: 2px solid yellow;
+
+  color: #121212;
+  background-color: #fff;
+
+  text-transform: uppercase;
+
+  font-weight: bold;
+}
+
+/** Pokemon image */
+.image_wrapper {
+  margin-bottom: -8rem;
+}
+
+.image_wrapper img {
+  width: 25rem;
+  height: 25rem;
+}
+
+/**
+ - Card content
+*/
+
+.card__content {
+  width: 100%;
+  padding: 4rem;
+
+  background-color: #fff;
+
+  display: flex;
+  justify-content: center;
+}
+
+.card__content > div {
+  flex: 1;
+  margin-top: 2rem;
+
+  margin-left: 1.6rem;
+}
+
+.card__content > div:first-child {
+  margin-left: 0;
+}
+
+.card__content ul {
+  list-style: none;
+}
+
+.card__content h3 {
+  font-size: 2rem;
+  padding: 0.5rem 0;
+
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid;
+}
