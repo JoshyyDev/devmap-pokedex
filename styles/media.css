@@ -1,0 +1,36 @@
+/** Medias */
+@media (max-width: 780px) {
+  .main_container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navigation_bar {
+    width: min(100%, 40rem);
+    margin-top: 2rem;
+  }
+
+  .navigation_list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .navigation_list li {
+    flex: 1;
+    margin: 0.4rem;
+  }
+
+  .navigation_list li button {
+    border-radius: 1rem;
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    animation: none;
+  }
+}
