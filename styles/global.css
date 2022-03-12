@@ -22,13 +22,16 @@
 * {
   margin: 0;
   padding: 0;
+
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 
   font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+
   border: none;
   outline: none;
-
-  font-size: 1.6rem;
 }
 
 @media (max-width: 1024px) {
@@ -43,12 +46,18 @@
   }
 }
 
-ul {
-  list-style: none;
-}
-
 body {
   background-color: var(--color-body-background);
+}
+
+/** 
+ Example: 
+  <button>
+    Internal elements
+  </button> 
+*/
+button * {
+  pointer-events: none;
 }
 
 button,
@@ -65,4 +74,9 @@ img {
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
+  pointer-events: none;
+}
+
+ul {
+  list-style: none;
 }
