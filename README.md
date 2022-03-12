@@ -1,23 +1,26 @@
 <div align="center">
-  <img src="./assets/icon.png" width="80px" height="80px" />
-  <h3>Pokédex</h3>
+  <img src="./assets/icon.png" />
+  <h3>Pokédex - coleção de Pokemons</h3>
 
   <p align="center">
-    📓🎉 Pokédex desenvolvida usando HTML, CSS e JavaScript, entre outros.</p>  
+  Pokédex desenvolvida usando HTML, CSS e JavaScript, entre outros.
+  </p>  
 </div>
 
 <div align="center">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/lucasbernardol/devmap-pokedex">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/lucasbernardol/devmap-pokedex" />
 
-  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/lucasbernardol/devmap-pokedex">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/lucasbernardol/devmap-pokedex" />
 
-  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/lucasbernardol/devmap-pokedex">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/lucasbernardol/devmap-pokedex" />
 
-  <img alt="GitHub" src="https://img.shields.io/github/license/lucasbernardol/devmap-pokedex">
+  <img alt="GitHub" src="https://img.shields.io/github/license/lucasbernardol/devmap-pokedex" />
 </div>
 
 <p align="center">
-  <small>Build with ❤️ by: <a href="https://github.com/lucasbernardol">José Lucas</a></small>
+  <small>
+    Build with ❤️ by: <a href="https://github.com/lucasbernardol">José Lucas</a>
+  </small>
 </p>
 
 ## Demonstração (demo)
@@ -27,7 +30,7 @@ acessar: [:earth_americas: Pokédex - DEMO](https://lucasbernardol.github.io/dev
 
 ## :wrench: Como executar no ambiente local?
 
-### :raised_hands: Guia de instalação
+### Guia de instalação
 
 1. Faça um clone do repositório através do git. Use o comando abaixo:
 
@@ -44,7 +47,7 @@ $ cd devmap-pokedex/
    2.1 Presumo que isso seja útil! Se o seu Sistema Operacional é o Windows, execute a instrução abaixo no CMD ou Command Prompt:
 
 ```batch
-:: Arquivo "index.html" será aberto no navegador padrão (pode funcionar)!
+rem Arquivo "index.html" será aberto no navegador padrão (pode funcionar)!
 start index.html
 ```
 
