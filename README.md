@@ -1,6 +1,6 @@
 <div align="center">
   <img src="./assets/icon.png" width="120px" height="120px" />
-  <h2>Pokédex</h2>
+  <h3>Pokédex - Contém os Pokemons favoritos!</h3>
 
   <p align="center">
   Pokédex (coleção de pokemons), aplicação desenvolvida durante o evento 
