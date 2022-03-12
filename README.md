@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="./assets/icon.png" width="120px" height="120px" />
-  <h3>Pokédex - Contém os Pokemons favoritos!</h3>
+  <img src="./public/assets/icon.png" width="120px" height="120px" />
+  <h3>Pokédex - apenas os favoritos!</h3>
 
   <p align="center">
   Pokédex (coleção de pokemons), aplicação desenvolvida durante o evento 
@@ -12,9 +12,11 @@
 <div align="center">
   <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/lucasbernardol/devmap-pokedex" />
 
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/lucasbernardol/devmap-pokedex" />
+
   <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/lucasbernardol/devmap-pokedex" />
 
-  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/lucasbernardol/devmap-pokedex" />
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/lucasbernardol/devmap-pokedex">
 
   <img alt="GitHub" src="https://img.shields.io/github/license/lucasbernardol/devmap-pokedex" />
 </div>
@@ -49,7 +51,7 @@ $ cd devmap-pokedex/
    2.1 Presumo que isso seja útil! Se o seu Sistema Operacional é o Windows, execute a instrução abaixo no CMD ou Command Prompt:
 
 ```batch
-rem Arquivo "index.html" será aberto no navegador padrão (pode funcionar)!
+rem O arquivo "index.html" será aberto no navegador padrão (pode funcionar)!
 start index.html
 ```
 
