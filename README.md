@@ -1,6 +1,6 @@
 <div align="center">
   <img src="./public/assets/icon.png" width="120px" height="120px" />
-  <h3>Pokédex - apenas os favoritos!</h3>
+  <h3>Pokédex - Apenas os favoritos!</h3>
 
   <p align="center">
   Pokédex (coleção de pokemons), aplicação desenvolvida durante o evento 
@@ -55,7 +55,7 @@ rem O arquivo "index.html" será aberto no navegador padrão (pode funcionar)!
 start index.html
 ```
 
-**Observações:** se usa o vscode como IDE princial, existem uma extensão chamada
+**Observações:** se você usa o vscode como IDE princial, existem uma extensão chamada
 ["live server"](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) que é responsável por criar um pequeno servidor, e esse servidor
 irá disponibilizar seus arquivos estáticos como HTML, CSS, JavaScript, imagens, etc.
 E tudo isso no `localhost`.
