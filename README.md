@@ -1,9 +1,11 @@
 <div align="center">
-  <img src="./assets/icon.png" />
-  <h3>Pokédex - coleção de Pokemons</h3>
+  <img src="./assets/icon.png" width="120px" height="120px" />
+  <h2>Pokédex</h2>
 
   <p align="center">
-  Pokédex desenvolvida usando HTML, CSS e JavaScript, entre outros.
+  Pokédex (coleção de pokemons), aplicação desenvolvida durante o evento 
+  #mapadevweek.<br/> O projeto utiliza como base as seguintes 
+  tecnologias: HTML, CSS e JavaScript
   </p>  
 </div>
 
