@@ -1,48 +1,73 @@
-const DOMCardsReferences = document.querySelectorAll('.card');
-const DOMButtonsReferenes = document.querySelectorAll('.pokemon-select');
+const cards = document.querySelectorAll('.card');
+const buttons = document.querySelectorAll('.pokemon-select');
+
+const CSS_CLASS_NAMES = {
+  button: 'checked',
+  card: 'visible',
+};
 
 class PokemonStorage {
+  _key_prefix = 'pokemon_storage_devmap:';
+
   constructor() {}
 
-  key = 'pokemon_storage_devmap';
+  set(key, data) {
+    const storageKey = this._key_prefix + key; // devmap:{key}
 
-  set(data, key = this.key) {
-    const stringJson = this._stringfy(data);
+    const parsed = this.stringfy(data);
 
-    localStorage.setItem(key, stringJson);
+    localStorage.setItem(storageKey, parsed);
+
+    return { data, parsed };
   }
 
-  get(key = this.key) {
-    const data = localStorage.getItem(key);
+  get(key) {
+    const storageKey = this._key_prefix + key;
 
-    return this._parse(data);
+    const data = localStorage.getItem(storageKey);
+
+    return this.parse(data);
   }
 
-  _stringfy(object) {
+  stringfy(object) {
     return JSON.stringify(object);
   }
 
-  _parse(json) {
+  parse(json) {
     return JSON.parse(json);
   }
 }
 
 class Pokemon {
-  IDKey = 'pokemonCardId';
-  storageKey = 'pokemon_storage_devmap'; // dataset key
+  datasetIdKey = 'pokemonCardId';
+  storageKey = 'select_card'; // dataset key
 
   /** @param storage {PokemonStorage} */
-  constructor(DOMCardsElements, DOMButtonElements, storage) {
-    if (!(storage instanceof PokemonStorage))
-      throw new Error('Invalid Pokemon storage!');
+  constructor(DOMCardElements, DOMButtonElements, storage) {
+    this.cards = [...DOMCardElements];
+    this.buttons = [...DOMButtonElements];
 
     this.storage = storage;
-
-    this.cardElements = [...DOMCardsElements];
-    this.buttonElements = [...DOMButtonElements];
   }
 
-  /** @private _findElementByDatasetKey */
+  /** @param element {HTMLElement} */
+  buttonDisabled(element, elementType = 'button') {
+    const hasNotAttributeInElement = !element.hasAttribute('disabled');
+
+    const isValidHTMLElement = element.tagName === elementType.toUpperCase();
+
+    if (hasNotAttributeInElement && isValidHTMLElement) {
+      element.setAttribute('disabled', 'true');
+    }
+  }
+
+  /** @param element {HTMLElement} */
+  buttonEnabled(element) {
+    const isButtonElement = element.tagName === 'button'.toUpperCase();
+
+    if (isButtonElement) element.removeAttribute('disabled');
+  }
+
   _getDatasetValue(element, key = 'id') {
     return element.dataset[key];
   }
@@ -55,107 +80,134 @@ class Pokemon {
     element.classList.add(className);
   }
 
-  _removeAllClassNames(elements, className) {
+  _removeAllClassNames(elements, className, enableButton = true) {
     for (const element of elements) {
+      if (enableButton) this.buttonEnabled(element);
+
       const hasClassName = this._containsClassName(element, className);
 
-      hasClassName ? element.classList.remove(className) : null;
+      if (hasClassName) {
+        element.classList.remove(className);
+      }
     }
   }
 
   /** @param elements {Array<HTMLElement>}  */
-  _findIndexByDataset(elements, key, expected) {
-    const index = elements.findIndex((element) => {
-      const value = this._getDatasetValue(element, key);
-
-      return Number(value) === expected;
-    });
-
-    return index;
+  _findIndexDataset(elements, key, expected) {
+    return elements.findIndex(
+      (element) =>
+        Number(this._getDatasetValue(element, key)) === Number(expected)
+    );
   }
 
   /** wrapper  */
-  setClassNameAndRemoveAll(options = {}) {
-    const { elements, currentOrIndex, className = 'checked' } = options;
-
+  setElementState({ elements, current, className }) {
     this._removeAllClassNames(elements, className);
 
-    const is =
-      typeof currentOrIndex === 'number' && Number.isInteger(currentOrIndex);
+    this._setClassName(current, className); // DOM effect
 
-    const element = is ? elements[currentOrIndex] : currentOrIndex;
-
-    this._setClassName(element, className);
+    /** @TODO disable current button  */
+    this.buttonDisabled(current);
   }
 
-  alterClassNames({ buttonOrIndex, className: buttonClassName }, second) {
-    const { cardOrIndex, className: cardClassName } = second;
+  /**
+   * @param state {{
+   *  button: { elements, current, className },
+   *  card: { elements, current, className }
+   *  }}
+   * */
+  setState(state) {
+    const stateKeys = Object.keys(state);
 
-    const cards = this.cardElements;
-    const buttons = this.buttonElements;
+    const keysLessThanOne = stateKeys.length < 1;
 
-    this.setClassNameAndRemoveAll({
-      elements: buttons,
-      currentOrIndex: buttonOrIndex,
-      className: buttonClassName,
+    if (keysLessThanOne) return null;
+
+    for (const key of stateKeys) {
+      const { elements, current, className } = state[key];
+
+      this.setElementState({ elements, current, className });
+    }
+  }
+
+  /**
+   * @param options {{
+   *   button: number | HTMLElement,
+   *   card: number | HTMLElement
+   * }}
+   **/
+  mekeState(options) {
+    const { button, card } = options;
+
+    const [buttonIsInt, cardIsInt] = Object.keys(options).map((key) => {
+      return typeof options[key] === 'number' && Number.isInteger(options[key]);
     });
 
-    this.setClassNameAndRemoveAll({
-      elements: cards,
-      currentOrIndex: cardOrIndex,
-      className: cardClassName,
-    });
+    const currentButtonElement = buttonIsInt ? this.buttons[button] : button;
+
+    const currentCardElement = cardIsInt ? this.cards[card] : card;
+
+    const state = {
+      button: {
+        elements: this.buttons,
+        current: currentButtonElement,
+        className: CSS_CLASS_NAMES.button,
+      },
+
+      card: {
+        elements: this.cards,
+        current: currentCardElement,
+        className: CSS_CLASS_NAMES.card,
+      },
+    };
+
+    console.debug({ state, boolean: { buttonIsInt, cardIsInt } });
+
+    return state;
   }
 
   handle(event) {
     const { currentTarget: button } = event;
 
-    const cards = this.cardElements;
+    const id = button.dataset.id;
 
-    /** example: 1, 2, 3...  */
-    const refId = Number(button.dataset.id);
+    /** Card index  */
+    const cardIndex = this._findIndexDataset(this.cards, this.datasetIdKey, id);
 
-    const index = this._findIndexByDataset(cards, this.IDKey, refId);
+    const state = this.mekeState({ button, card: cardIndex });
 
-    this.alterClassNames(
-      { buttonOrIndex: button, className: 'checked' },
-      { cardOrIndex: index, className: 'visible' }
-    );
+    this.setState({
+      ...state,
+    });
 
     /** @TODO save selected pokemon  */
-    this.storage.set({ cardAndButtonArrayIndex: index }, this.storageKey);
+    const pokemonStorageKey = this.storageKey;
+
+    this.storage.set(pokemonStorageKey, { index: cardIndex });
   }
 
   load() {
     const storageItem = this.storage.get(this.storageKey) || {};
 
-    const { cardAndButtonArrayIndex: index } = Object.assign(
-      { cardAndButtonArrayIndex: 0 },
-      { ...storageItem }
-    );
+    const { index } = Object.assign({ index: 0 }, storageItem);
 
-    this.alterClassNames(
-      { buttonOrIndex: index, className: 'checked' },
-      { cardOrIndex: index, className: 'visible' }
-    );
-  }
-}
+    const state = this.mekeState({ button: index, card: index });
 
-/** Events  */
-class HandleEvent {
-  static ButtonHandle(DOMHTMLButtonReference, handle) {
-    DOMHTMLButtonReference.addEventListener('click', (event) => handle(event));
+    this.setState({
+      ...state,
+    });
   }
 }
 
 window.addEventListener('load', () => {
   const storage = new PokemonStorage();
-  const pokemon = new Pokemon(DOMCardsReferences, DOMButtonsReferenes, storage);
+
+  const pokemon = new Pokemon(cards, buttons, storage);
 
   // Load localStorage data
   pokemon.load();
 
-  DOMButtonsReferenes.forEach((button) => {
-    HandleEvent.ButtonHandle(button, (e) => pokemon.handle(e));
+  buttons.forEach((button) => {
+    button.addEventListener('click', (event) => pokemon.handle(event));
   });
 });
