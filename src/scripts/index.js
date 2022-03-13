@@ -1,10 +1,100 @@
-const cards = document.querySelectorAll('.card');
-const buttons = document.querySelectorAll('.pokemon-select');
+const cardElements = document.querySelectorAll('.card');
+const buttonElements = document.querySelectorAll('.pokemon-select');
 
-const CSS_CLASS_NAMES = {
+const SOUNDS_DIR = 'public/sounds/';
+
+const SOUND_FILE = 'effect.mp3';
+
+const CASCADING_STYLE_STATUS_CLASS = {
   button: 'checked',
   card: 'visible',
 };
+
+class PokemonSounds {
+  /**
+   * @param options {{
+   *  files: string[]
+   * }}
+   **/
+  constructor(options = {}) {
+    const { files = [SOUND_FILE] } = options;
+
+    this.audioElement = document.createElement('audio');
+
+    this.sounds = files.map((file) => ({
+      src: SOUNDS_DIR + file,
+      alt: file,
+      name: file,
+    }));
+  }
+
+  /** @param vol {string} */
+  calculateVolume(volumeString) {
+    const VOLUME = 0.2; // 20%
+
+    const isPercent =
+      typeof volumeString === 'string' && volumeString.endsWith('%');
+
+    function calculate(volString) {
+      /**
+       * Example:
+       *  1 - 100%
+       *  x -  20%
+       *
+       *  100x = 20
+       *  x = 20/100
+       *  x = 2/10
+       *  x = 0.2
+       */
+      const [percent] = volString.split('%');
+
+      return Number(percent) / (100 * 1);
+    }
+
+    return isPercent ? calculate(volumeString) : VOLUME;
+  }
+
+  _findSoundByPartialName(partialName) {
+    return this.sounds.find(({ name }) => name.startsWith(partialName));
+  }
+
+  /**
+   * @param attributes {{ alt: string, src: string, volume: number }}
+   * @param audio {HTMLAudioElement}
+   * */
+  _setAttributes(audio, attributes) {
+    const attributeKeys = Object.keys(attributes);
+
+    for (const key of attributeKeys) {
+      const attributeValue = attributes[key];
+
+      switch (key) {
+        case 'volume':
+          audio.volume = attributeValue;
+        default:
+          audio.setAttribute(key, attributeValue);
+      }
+    }
+  }
+
+  play(partialAudioName = 'effect.mp3') {
+    const soundInformation = this._findSoundByPartialName(partialAudioName);
+
+    if (soundInformation) {
+      const htmlAudioElement = this.audioElement;
+
+      this._setAttributes(htmlAudioElement, {
+        ...soundInformation,
+        volume: this.calculateVolume('1%'),
+      });
+
+      // Fix: "request was interrupted"
+      setTimeout(() => {
+        htmlAudioElement.play();
+      }, 100);
+    }
+  }
+}
 
 class PokemonStorage {
   _key_prefix = 'pokemon_storage_devmap:';
@@ -12,13 +102,16 @@ class PokemonStorage {
   constructor() {}
 
   set(key, data) {
-    const storageKey = this._key_prefix + key; // devmap:{key}
+    /**
+     * @example: 'pokemon_storage_devmap:{key}
+     **/
+    const storageKey = this._key_prefix + key;
 
-    const parsed = this.stringfy(data);
+    const parsed = this._serialize(data);
 
     localStorage.setItem(storageKey, parsed);
 
-    return { data, parsed };
+    return { parsed, data };
   }
 
   get(key) {
@@ -26,14 +119,14 @@ class PokemonStorage {
 
     const data = localStorage.getItem(storageKey);
 
-    return this.parse(data);
+    return this._deserialize(data);
   }
 
-  stringfy(object) {
+  _serialize(object) {
     return JSON.stringify(object);
   }
 
-  parse(json) {
+  _deserialize(json) {
     return JSON.parse(json);
   }
 }
@@ -42,12 +135,28 @@ class Pokemon {
   datasetIdKey = 'pokemonCardId';
   storageKey = 'select_card'; // dataset key
 
-  /** @param storage {PokemonStorage} */
-  constructor(DOMCardElements, DOMButtonElements, storage) {
-    this.cards = [...DOMCardElements];
-    this.buttons = [...DOMButtonElements];
-
+  /**
+   * @param options {{
+   *  cards: HTMLElement[]
+   *  buttons: HTMLElement[]
+   *  storage: PokemonStorage,
+   *  sounds: PokemonSounds
+   * }}
+   */
+  constructor({ cards, buttons, storage, sounds }) {
     this.storage = storage;
+    this.sound = sounds;
+
+    this.cards = [...cards];
+    this.buttons = [...buttons];
+  }
+
+  init() {
+    const buttonsElements = this.buttons;
+
+    buttonsElements.forEach((button) => {
+      button.addEventListener('click', (event) => this.handle(event));
+    });
   }
 
   /** @param element {HTMLElement} */
@@ -100,14 +209,15 @@ class Pokemon {
     );
   }
 
-  /** wrapper  */
-  setElementState({ elements, current, className }) {
+  setElementState({ elements, current, className }, { play = false }) {
     this._removeAllClassNames(elements, className);
 
     this._setClassName(current, className); // DOM effect
 
     /** @TODO disable current button  */
     this.buttonDisabled(current);
+
+    if (play) this.sound.play();
   }
 
   /**
@@ -115,8 +225,9 @@ class Pokemon {
    *  button: { elements, current, className },
    *  card: { elements, current, className }
    *  }}
+   * @param extras {{ play: boolean }}
    * */
-  setState(state) {
+  setState(state, extras = {}) {
     const stateKeys = Object.keys(state);
 
     const keysLessThanOne = stateKeys.length < 1;
@@ -126,7 +237,7 @@ class Pokemon {
     for (const key of stateKeys) {
       const { elements, current, className } = state[key];
 
-      this.setElementState({ elements, current, className });
+      this.setElementState({ elements, current, className }, extras);
     }
   }
 
@@ -151,17 +262,20 @@ class Pokemon {
       button: {
         elements: this.buttons,
         current: currentButtonElement,
-        className: CSS_CLASS_NAMES.button,
+        className: CASCADING_STYLE_STATUS_CLASS.button,
       },
 
       card: {
         elements: this.cards,
         current: currentCardElement,
-        className: CSS_CLASS_NAMES.card,
+        className: CASCADING_STYLE_STATUS_CLASS.card,
       },
     };
 
-    console.debug({ state, boolean: { buttonIsInt, cardIsInt } });
+    console.debug({
+      bool: { buttonIsInt, cardIsInt },
+      state,
+    });
 
     return state;
   }
@@ -176,9 +290,7 @@ class Pokemon {
 
     const state = this.mekeState({ button, card: cardIndex });
 
-    this.setState({
-      ...state,
-    });
+    this.setState({ ...state }, { play: true });
 
     /** @TODO save selected pokemon  */
     const pokemonStorageKey = this.storageKey;
@@ -187,27 +299,43 @@ class Pokemon {
   }
 
   load() {
-    const storageItem = this.storage.get(this.storageKey) || {};
+    const storageKey = this.storageKey;
+
+    const storageItem = this.storage.get(storageKey) || {};
 
     const { index } = Object.assign({ index: 0 }, storageItem);
 
-    const state = this.mekeState({ button: index, card: index });
+    const state = this.mekeState({
+      button: index,
+      card: index,
+    });
 
     this.setState({
       ...state,
     });
+
+    return this;
   }
 }
 
-window.addEventListener('load', () => {
+function application() {
   const storage = new PokemonStorage();
 
-  const pokemon = new Pokemon(cards, buttons, storage);
+  const sounds = new PokemonSounds();
 
-  // Load localStorage data
-  pokemon.load();
-
-  buttons.forEach((button) => {
-    button.addEventListener('click', (event) => pokemon.handle(event));
+  const pokemon = new Pokemon({
+    storage,
+    sounds,
+    cards: cardElements,
+    buttons: buttonElements,
   });
-});
+
+  /**
+   * - Pokemon load:
+   *  localStorage
+   *  HTML Events
+   */
+  pokemon.load().init();
+}
+
+window.addEventListener('load', () => application());
