@@ -1,3 +1,15 @@
+/** Global element: div */
+.pokedex_wrapper {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
 .main_container {
   width: min(100%, 750px);
 
@@ -13,7 +25,7 @@
 }
 
 .cards_container {
-  width: min(100%, 40rem);
+  width: min(100%, 42rem);
 }
 
 .card {
@@ -45,6 +57,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  background: var(--background-overlay-url) no-repeat;
+
+  background-size: 90% 95%;
+  background-position: center;
 }
 
 .card__header.eletric {
@@ -142,7 +159,7 @@
 */
 .card__content {
   width: 100%;
-  padding: 3.5rem 4rem;
+  padding: 4rem;
 
   background-color: var(--color-white);
 
