@@ -1,11 +1,11 @@
 <div align="center">
   <img src="./public/assets/icon.png" width="120px" height="120px" />
-  <h3>Pokédex - Apenas os favoritos!</h3>
+  <h3>Pokédex</h3>
 
   <p align="center">
   Pokédex (coleção de pokemons), aplicação desenvolvida durante o evento 
   #mapadevweek.<br/> O projeto utiliza como base as seguintes 
-  tecnologias: HTML, CSS e JavaScript
+  tecnologias: HTML, CSS, JavaScript, entre outros.
   </p>  
 </div>
 
@@ -18,6 +18,8 @@
 
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/lucasbernardol/devmap-pokedex">
 
+  <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/lucasbernardol/devmap-pokedex/Github-pages?label=github%20pages">
+
   <img alt="GitHub" src="https://img.shields.io/github/license/lucasbernardol/devmap-pokedex" />
 </div>
 
@@ -27,10 +29,10 @@
   </small>
 </p>
 
-## Demonstração (demo)
+## :earth_americas: Demonstração (demo)
 
 Olá :wave:, você pode visualizar e testar o projeto agora mesmo, basta
-acessar: [:earth_americas: Pokédex - DEMO](https://lucasbernardol.github.io/devmap-pokedex/)
+acessar: [Pokédex - DEMO](https://lucasbernardol.github.io/devmap-pokedex/)
 
 ## :wrench: Como executar no ambiente local?
 
